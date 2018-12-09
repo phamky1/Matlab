@@ -74,7 +74,13 @@ varargout{1} = handles.output;
 clear all;
 global x;
 x=serial('COM8','BAUD', 9600);
-fopen(x);
+try
+  fopen(x);
+catch
+  %delete(instrfindall);
+  fclose(instrfindall);
+  fopen(x);
+end
 
 
 % --- Executes on button press in pushbutton1.
