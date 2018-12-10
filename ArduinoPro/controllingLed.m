@@ -22,7 +22,7 @@ function varargout = controllingLed(varargin)
 
 % Edit the above text to modify the response to help controllingLed
 
-% Last Modified by GUIDE v2.5 10-Dec-2018 03:27:54
+% Last Modified by GUIDE v2.5 10-Dec-2018 04:55:01
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -60,8 +60,7 @@ guidata(hObject, handles);
 
 % UIWAIT makes controllingLed wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
-delete(instrfindall);
-set(handles.popup1,'String',getAvailableComPort);
+
 
 % --- Outputs from this function are returned to the command line.
 function varargout = controllingLed_OutputFcn(hObject, eventdata, handles) 
@@ -107,7 +106,7 @@ function popup1_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns popup1 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popup1
 
-set(handles.popup1,'String',getAvailableComPort);
+set(hObject,'String',getAvailableComPort);
 
 % --- Executes during object creation, after setting all properties.
 function popup1_CreateFcn(hObject, eventdata, handles)
@@ -121,6 +120,8 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
+delete(instrfindall);
+set(hObject,'String',getAvailableComPort);
 
 % --- Executes on button press in pushbutton3.
 function pushbutton3_Callback(hObject, eventdata, handles)
@@ -135,23 +136,27 @@ global x;
 if(~isempty(comports{chosencom}))
     set(x,'Port',comports{chosencom});
 else
-    fprintf('you must chose com port to conect')
+    cout(handles,'failed to conect u did not chose com port to conect')
 end
 
 try
+  cout(handles,'conecting..')
   fopen(x);
 catch
     try
+      cout(handles,'Re-conecting..')
       %delete(instrfindall);
       fclose(instrfindall);
       fopen(x);
     catch
-        fprintf('can not conect with this port  :');
-        disp(get(x,'Port'))
+        cout(handles,strcat('can not conect with this port  :',...
+        get(x,'Port')));
         return
     end
 end
 
+cout(handles,strcat('conected seccesfly to :', ...
+    get(x,'port')))
 set(handles.pushbutton1,'Enable','on');
 set(handles.pushbutton2,'Enable','on');
 
@@ -172,6 +177,34 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global x;
 fclose(x);
+cout(handles,'Disconected')
 set(handles.pushbutton1,'Enable','off');
 set(handles.pushbutton2,'Enable','off');
 
+
+
+function edit3_Callback(hObject, eventdata, handles)
+% hObject    handle to edit3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit3 as text
+%        str2double(get(hObject,'String')) returns contents of edit3 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+function cout(handles,str)
+    currString= get(handles.edit3,'String');
+    currString{end+1}=str;
+    set(handles.edit3,'String',currString);
