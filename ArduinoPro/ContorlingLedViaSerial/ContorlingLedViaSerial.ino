@@ -2,7 +2,7 @@
  * opjective:                                                         *                       
  * simple program to control a LED via sarial conmunication           *            
  * i made it to learn access serial from matlab and other PC languges *           
- * like c/c++ java and python  and make simble Gui                    *              
+ * like c/c++ java and python  and make simple Gui                    *              
  *                                                                    *                
  * the target board : Arduino uno                                     *                       
  *                                                                    *                    
