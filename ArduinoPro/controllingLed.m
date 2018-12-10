@@ -22,7 +22,7 @@ function varargout = controllingLed(varargin)
 
 % Edit the above text to modify the response to help controllingLed
 
-% Last Modified by GUIDE v2.5 10-Dec-2018 01:44:33
+% Last Modified by GUIDE v2.5 10-Dec-2018 03:27:54
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -107,6 +107,7 @@ function popup1_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns popup1 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popup1
 
+set(handles.popup1,'String',getAvailableComPort);
 
 % --- Executes during object creation, after setting all properties.
 function popup1_CreateFcn(hObject, eventdata, handles)
@@ -131,7 +132,11 @@ comports=get(handles.popup1,'String');
 chosencom=get(handles.popup1,'value');
 
 global x;
-set(x,'Port',comports{chosencom});
+if(~isempty(comports{chosencom}))
+    set(x,'Port',comports{chosencom});
+else
+    fprintf('you must chose com port to conect')
+end
 
 try
   fopen(x);
@@ -141,66 +146,14 @@ catch
       fclose(instrfindall);
       fopen(x);
     catch
-        
+        fprintf('can not conect with this port  :');
+        disp(get(x,'Port'))
+        return
     end
 end
- 
 
-
-
-function edit1_Callback(hObject, eventdata, handles)
-% hObject    handle to edit1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit1 as text
-%        str2double(get(hObject,'String')) returns contents of edit1 as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on key press with focus on edit1 and none of its controls.
-function edit1_KeyPressFcn(hObject, eventdata, handles)
-% hObject    handle to edit1 (see GCBO)
-% eventdata  structure with the following fields (see MATLAB.UI.CONTROL.UICONTROL)
-%	Key: name of the key that was pressed, in lower case
-%	Character: character interpretation of the key(s) that was pressed
-%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
-% handles    structure with handles and user data (see GUIDATA)
-
-
-
-function edit2_Callback(hObject, eventdata, handles)
-% hObject    handle to edit2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit2 as text
-%        str2double(get(hObject,'String')) returns contents of edit2 as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
+set(handles.pushbutton1,'Enable','on');
+set(handles.pushbutton2,'Enable','on');
 
 
 % --- Executes during object deletion, before destroying properties.
@@ -210,3 +163,15 @@ function figure1_DeleteFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global x;
 fclose(x);
+
+
+% --- Executes on button press in pushbutton5.
+function pushbutton5_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global x;
+fclose(x);
+set(handles.pushbutton1,'Enable','off');
+set(handles.pushbutton2,'Enable','off');
+

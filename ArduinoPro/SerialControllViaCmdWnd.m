@@ -1,11 +1,19 @@
 x=serial('COM8','BAUD', 9600);
 
+
 try
-  fopen(x);
+    fopen(x);
 catch
-  %delete(instrfindall);
-  fclose(instrfindall);
-  fopen(x);
+    try
+        
+        %delete(instrfindall);
+        fclose(instrfindall);
+        fopen(x);
+    catch
+        fprintf('\n\ncan not open com8\n');
+        fprintf('check that you plug your controller to com8\n')
+        return
+    end
 end
 
 
