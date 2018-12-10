@@ -22,7 +22,7 @@ function varargout = controllingLed(varargin)
 
 % Edit the above text to modify the response to help controllingLed
 
-% Last Modified by GUIDE v2.5 10-Dec-2018 04:55:01
+% Last Modified by GUIDE v2.5 10-Dec-2018 14:38:38
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -208,3 +208,25 @@ function cout(handles,str)
     currString= get(handles.edit3,'String');
     currString{end+1}=str;
     set(handles.edit3,'String',currString);
+
+
+% --- Executes on button press in pushbutton6.
+function pushbutton6_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    tts('start the show');
+    cout(handles,'start show');
+    tts('hi my  name is azmy and iam a robot');
+    tts('i was created at El shorouk academy');
+    tts('under supervision of doctor  Abou El Oyoun');
+    tts('and this is last update and final version to me');
+    tts('in this version my team give me the ability to move my hand like this ');
+    tts('as well as the ability of moving my head');
+    tts('and they spent some effort to enhance my program and the speech communication');
+    tts('and mix all this new features in executable program make me dance ');
+    tts('and when i say dance, i mean literally robotics dance and i will show it to you');
+    
+    
+    
+    
