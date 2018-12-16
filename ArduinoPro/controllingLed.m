@@ -55,6 +55,16 @@ function controllingLed_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for controllingLed
 handles.output = hObject;
 
+global x;
+x=serial('COM8','BAUD', 9600);
+
+t = timer();
+t.Period = .5;
+t.ExecutionMode = 'fixedRate';
+t.TimerFcn = @TimerFcn;
+t.UserData= handles;
+handles.timer = t;
+
 % Update handles structure
 guidata(hObject, handles);
 
@@ -71,11 +81,7 @@ function varargout = controllingLed_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
-clear all;
 
-global x;
-
-x=serial('COM8','BAUD', 9600);
 
 
 
@@ -142,15 +148,18 @@ end
 try
   cout(handles,'conecting..')
   fopen(x);
+  start(handles.timer);
 catch
     try
       cout(handles,'Re-conecting..')
       %delete(instrfindall);
       fclose(instrfindall);
       fopen(x);
+      start(handles.timer);
     catch
         cout(handles,strcat('can not conect with this port  :',...
         get(x,'Port')));
+        stop(handles.timer);
         return
     end
 end
@@ -168,6 +177,8 @@ function figure1_DeleteFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global x;
 fclose(x);
+delete(x);
+delete(handles.timer);
 
 
 % --- Executes on button press in pushbutton5.
@@ -177,7 +188,8 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global x;
 fclose(x);
-cout(handles,'Disconected')
+cout(handles,'Disconected');
+stop(handles.timer);
 set(handles.pushbutton1,'Enable','off');
 set(handles.pushbutton2,'Enable','off');
 
@@ -226,7 +238,9 @@ function pushbutton6_Callback(hObject, eventdata, handles)
     tts('and they spent some effort to enhance my program and the speech communication');
     tts('and mix all this new features in executable program make me dance ');
     tts('and when i say dance, i mean literally robotics dance and i will show it to you');
-    
-    
-    
-    
+
+%timer function   
+function []=TimerFcn(timerObj, event)
+        global x;
+        cout(get(timerObj, 'UserData'),...
+            strcat('>>',fscanf(x) ) );
